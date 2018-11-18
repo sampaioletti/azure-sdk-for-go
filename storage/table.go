@@ -218,6 +218,19 @@ func (options *QueryOptions) getParameters() (url.Values, map[string]string) {
 	return query, headers
 }
 
+// GetURL returns the entities in the table.
+// from a QueryEntities or NextResults operation.
+//
+// See: https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/query-entities
+// See https://docs.microsoft.com/rest/api/storageservices/fileservices/query-timeout-and-pagination
+func (t *Table) GetURL(uri string, options *TableOptions, ml MetadataLevel) (*EntityQueryResult, error) {
+	if ml == EmptyPayload {
+		return nil, errEmptyPayload
+	}
+	headers := options.addToHeaders(map[string]string{})
+	return t.queryEntities(uri, headers, ml)
+}
+
 // QueryEntities returns the entities in the table.
 // You can use query options defined by the OData Protocol specification.
 //
